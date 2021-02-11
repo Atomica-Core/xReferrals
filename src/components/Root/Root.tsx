@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { connectToGoogleSheets } from '../../helpers/googleSheetsHelper';
 import InsertCode from '../../pages/InsertCode';
 import ManageInvites from '../../pages/ManageInvites';
+import DappMock from '../DappMock';
 import Loader from '../Loader';
 
 export interface RootProps {}
@@ -47,6 +48,7 @@ const Root: React.FC<RootProps> = () => {
     <>
       {/* <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button> */}
       <button onClick={toggleIsInviteOpen}>Share code modal</button>
+      <DappMock />
       {loading ? (
         <Loader />
       ) : (
