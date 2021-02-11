@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WalletConnector from './components/WalletConnector/WalletConnector';
 import Loader from './components/Loader';
+import Root from './components/Root';
 
 const theme = {
   colors: {
@@ -33,10 +34,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <Web3ReactProvider getLibrary={getLibrary}>
         <WalletConnector>
-          {/* <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button> */}
+          {/* <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button>
           <button onClick={toggleIsInviteOpen}>Share code modal</button>
           <InsertCode isOpen={isInsertCodeOpen} toggle={toggleIsInsertCodeOpen} />
-          <ManageInvites isOpen={isInviteOepn} toggle={toggleIsInviteOpen} />
+          <ManageInvites isOpen={isInviteOepn} toggle={toggleIsInviteOpen} /> */}
+          <Root />
         </WalletConnector>
       </Web3ReactProvider>
       <GlobalStyle />

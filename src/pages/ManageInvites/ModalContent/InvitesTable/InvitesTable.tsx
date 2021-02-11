@@ -10,17 +10,21 @@ const InvitesTable: React.FC<Props> = ({ inviteRows }) => {
   const getFeaturedInvite = () => inviteRows.find((row) => row.activatedBy === '')?.inviteCode;
   return (
     <>
-      <FeaturedTitle>{getFeaturedInvite()}</FeaturedTitle>
-      <DashedContainer>
-        <HeightControlContainer>
-          {inviteRows.map((row) => (
-            <ValueContainer key={row.inviteCode}>
-              <Text3>{row.inviteCode}</Text3>
-              <Text3 style={!row.activatedBy ? { color: grey } : {}}>{row.activatedBy || 'Not used yet'}</Text3>
-            </ValueContainer>
-          ))}
-        </HeightControlContainer>
-      </DashedContainer>
+      {!!inviteRows.length && (
+        <>
+          <FeaturedTitle>{getFeaturedInvite()}</FeaturedTitle>
+          <DashedContainer>
+            <HeightControlContainer>
+              {inviteRows.map((row) => (
+                <ValueContainer key={row.inviteCode}>
+                  <Text3>{row.inviteCode}</Text3>
+                  <Text3 style={!row.activatedBy ? { color: grey } : {}}>{row.activatedBy || 'Not used yet'}</Text3>
+                </ValueContainer>
+              ))}
+            </HeightControlContainer>
+          </DashedContainer>
+        </>
+      )}
     </>
   );
 };

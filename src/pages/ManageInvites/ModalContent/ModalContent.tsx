@@ -48,4 +48,6 @@ const Row = styled.div`
 
 const Icon = styled.div`
   cursor: pointer;
+  font-size: 10px;
+  margin-right: -30px;
 `;
