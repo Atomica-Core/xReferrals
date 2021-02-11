@@ -27,8 +27,6 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
 
   const context = useWeb3React<Web3Provider>();
 
-  const triedEager = useEagerConnect();
-
   const loadDescriptionSheet = async () => {
     const conn = await connectToGoogleSheets(DESCRIPTION_SHEET_ID);
     if (!conn?.rows) return;
@@ -74,23 +72,13 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
 
   useEffect(() => {
     async function activateWeb3() {
-      try {
-        if (context.active && context.library) {
-          setSigner(context.library.getSigner());
-          loadDescriptionSheet();
-          loadInvitesCreatedByTheUser();
-        } else {
-        }
-      } catch (e) {
-        console.log(e);
-        toast.error('Something wrong happened');
-        setLoading(false);
-      }
+      loadDescriptionSheet();
+      loadInvitesCreatedByTheUser();
     }
     setLoading(true);
 
     activateWeb3();
-  }, [triedEager]);
+  }, []);
 
   const content = {
     width: '500px',

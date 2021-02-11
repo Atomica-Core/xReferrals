@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Props } from '.';
 import { PrimaryBtn } from '../../../components/ui/Button';
 import DashedContainer, { FilledContainer } from '../../../components/ui/Container';
@@ -19,7 +20,10 @@ const ModalContent: React.FC<Props> = ({
 }: Props) => {
   return (
     <>
-      <Title>{title}</Title>
+      <Row>
+        <Title>{title}</Title>
+        <Icon onClick={close}>❌</Icon>
+      </Row>
       <FilledContainer style={{ padding: '20px' }}>
         <Text2> {headline}</Text2>
         <div style={{ marginTop: '10px' }}>
@@ -35,3 +39,13 @@ const ModalContent: React.FC<Props> = ({
 };
 
 export default ModalContent;
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const Icon = styled.div`
+  cursor: pointer;
+`;

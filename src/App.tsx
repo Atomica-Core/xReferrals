@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import InsertCode from './pages/InsertCode/types';
 import ManageInvites from './pages/ManageInvites/types';
@@ -8,6 +8,8 @@ import { GlobalStyle } from './components/ui/GlobalStyles';
 import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import WalletConnector from './components/WalletConnector/WalletConnector';
+import Loader from './components/Loader';
 
 const theme = {
   colors: {
@@ -30,10 +32,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button>
-        <button onClick={toggleIsInviteOpen}>Share code modal</button>
-        <InsertCode isOpen={isInsertCodeOpen} toggle={toggleIsInsertCodeOpen} />
-        <ManageInvites isOpen={isInviteOepn} toggle={toggleIsInviteOpen} />
+        <WalletConnector>
+          {/* <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button> */}
+          <button onClick={toggleIsInviteOpen}>Share code modal</button>
+          <InsertCode isOpen={isInsertCodeOpen} toggle={toggleIsInsertCodeOpen} />
+          <ManageInvites isOpen={isInviteOepn} toggle={toggleIsInviteOpen} />
+        </WalletConnector>
       </Web3ReactProvider>
       <GlobalStyle />
       <ToastContainer

@@ -6,74 +6,83 @@ import ModalContent from './ModalContent';
 import { connectToGoogleSheets } from '../../helpers/googleSheetsHelper';
 import { GoogleSpreadsheetRow } from 'google-spreadsheet';
 import { useWeb3React } from '@web3-react/core';
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import { GasStationService } from '../../utils/gasStation';
 import { ContractApi, ContractEnum, getContractAddress } from '../../utils/contractApi';
 import { constants } from 'ethers';
 import { useEagerConnect, useInactiveListener } from '../../hooks';
 import { injected } from '../../utils/connectors';
 import Loader from '../../components/Loader/Loader';
+import { toast } from 'react-toastify';
 
 const DESCRIPTION_SHEET_ID = process.env.REACT_APP_INSERT_CODE_SHEET_ID!;
 const ADMIN_SHEET_ID = process.env.REACT_APP_ADMIN_SHEET_ID!;
 
 const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
   const [title, setTitle] = useState('');
+  const [loading, setLoading] = useState(false);
   const [headline, setHeadline] = useState('');
   const [description, seetDescription] = useState('');
   const [inviteCode, setInviteCode] = useState('');
-  const [signer, setSigner] = useState<JsonRpcSigner>();
 
   const context = useWeb3React<Web3Provider>();
 
-  const triedEager = useEagerConnect();
-
-  const gasPriceService = new GasStationService();
-
   const loadDescriptionSheet = async () => {
-    const conn = await connectToGoogleSheets(DESCRIPTION_SHEET_ID);
-    if (!conn?.rows) return;
-    setTitle(conn.rows[0].value);
-    setHeadline(conn.rows[1].value);
-    seetDescription(conn.rows[2].value);
-  };
-
-  const setUserAllowance = async () => {
+    setLoading(true);
     try {
-      console.log(signer);
-      const Erc20 = ContractApi.initContract(ContractEnum.USDC, signer);
-      const wei = constants.MaxUint256;
-      console.log(wei.toString());
-      const gasPrice = await gasPriceService.getFastPrice();
-      const tx = await Erc20.approve(getContractAddress(ContractEnum.ReferralProgram), '10000000', { gasPrice });
-
-      await tx.wait(1);
-
-      const allowance = await Erc20.allowance(context.account, getContractAddress(ContractEnum.ReferralProgram));
-      console.log(allowance.toString());
-      console.log('SUCCESSSS');
+      const conn = await connectToGoogleSheets(DESCRIPTION_SHEET_ID);
+      if (!conn?.rows) {
+        toast.error('Oops! Something wrong happened');
+        return;
+      }
+      setTitle(conn.rows[0].value);
+      setHeadline(conn.rows[1].value);
+      seetDescription(conn.rows[2].value);
+      setLoading(false);
     } catch (e) {
-      console.log('ERROR', e);
+      setLoading(false);
+      toast.error('Oops! Something wrong happened');
+
+      console.log(e);
     }
   };
 
-  const payPremium = async (referral: string) => {
-    try {
-      console.log(signer);
-      const referralProgram = ContractApi.initContract(ContractEnum.ReferralProgram, signer);
+  // const setUserAllowance = async () => {
+  //   try {
+  //     console.log(signer);
+  //     const Erc20 = ContractApi.initContract(ContractEnum.USDC, signer);
+  //     const wei = constants.MaxUint256;
+  //     console.log(wei.toString());
+  //     const gasPrice = await gasPriceService.getFastPrice();
+  //     const tx = await Erc20.approve(getContractAddress(ContractEnum.ReferralProgram), '10000000', { gasPrice });
 
-      // const gasPrice = await gasPriceService.getFastPrice();
-      const tx = await referralProgram.payPremium(referral, {
-        gasLimit: 8000000,
-      });
+  //     await tx.wait(1);
 
-      await tx.wait(1);
-      console.log('SUCCESSSS');
-    } catch (e) {
-      console.log('ERROR', e);
-      // props.setLoading(false);
-    }
-  };
+  //     const allowance = await Erc20.allowance(context.account, getContractAddress(ContractEnum.ReferralProgram));
+  //     console.log(allowance.toString());
+  //     console.log('SUCCESSSS');
+  //   } catch (e) {
+  //     console.log('ERROR', e);
+  //   }
+  // };
+
+  // const payPremium = async (referral: string) => {
+  //   try {
+  //     console.log(signer);
+  //     const referralProgram = ContractApi.initContract(ContractEnum.ReferralProgram, signer);
+
+  //     // const gasPrice = await gasPriceService.getFastPrice();
+  //     const tx = await referralProgram.payPremium(referral, {
+  //       gasLimit: 8000000,
+  //     });
+
+  //     await tx.wait(1);
+  //     console.log('SUCCESSSS');
+  //   } catch (e) {
+  //     console.log('ERROR', e);
+  //     // props.setLoading(false);
+  //   }
+  // };
 
   const validateInviteCode = (rows: GoogleSpreadsheetRow[]) => {
     for (let row of rows) {
@@ -85,41 +94,44 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
   };
 
   const submitInviteCode = async () => {
-    const conn = await connectToGoogleSheets(ADMIN_SHEET_ID);
+    try {
+      setLoading(true);
+      const conn = await connectToGoogleSheets(ADMIN_SHEET_ID);
 
-    if (!conn) return;
+      if (!conn) return;
 
-    const currentAccount = context.account;
-    const validatedInviteCodeRow = validateInviteCode(conn.rows);
-    console.log(validatedInviteCodeRow);
-    if (validatedInviteCodeRow) {
-      await setUserAllowance();
-      await payPremium(validatedInviteCodeRow.createdBy);
-      validatedInviteCodeRow.activatedBy = currentAccount;
-      validatedInviteCodeRow.isValid = '0';
-      await validatedInviteCodeRow.save();
-      alert('saved');
-    } else {
-      alert('error');
+      const currentAccount = context.account;
+      const validatedInviteCodeRow = validateInviteCode(conn.rows);
+      console.log(validatedInviteCodeRow);
+      if (validatedInviteCodeRow) {
+        // await setUserAllowance();
+        // await payPremium(validatedInviteCodeRow.createdBy);
+        validatedInviteCodeRow.activatedBy = currentAccount;
+        validatedInviteCodeRow.isValid = '0';
+        await validatedInviteCodeRow.save();
+        setLoading(false);
+
+        toast('💸 Success');
+        toggle();
+      } else {
+        setLoading(false);
+
+        toast.error('Sorry, invalid invite');
+      }
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+
+      toast.error('Oops! Something wrong happened');
     }
   };
 
   useEffect(() => {
     async function activateWeb3() {
-      try {
-        console.log('context', context);
-        if (context.active && context.library) {
-          setSigner(context.library.getSigner());
-          loadDescriptionSheet();
-        } else {
-          console.log('OOOOOOOOOOOOQ');
-        }
-      } catch (e) {
-        console.log(e);
-      }
+      loadDescriptionSheet();
     }
     activateWeb3();
-  }, [triedEager]);
+  }, []);
 
   const content = {
     width: '500px',
@@ -155,7 +167,7 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
           onChangeValue={setInviteCode}
           submit={submitInviteCode}
         />
-        <Loader />
+        {loading && <Loader />}
       </Modal>
     </div>
   );
