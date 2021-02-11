@@ -12,6 +12,7 @@ import { ContractApi, ContractEnum, getContractAddress } from '../../utils/contr
 import { constants } from 'ethers';
 import { useEagerConnect, useInactiveListener } from '../../hooks';
 import { injected } from '../../utils/connectors';
+import Loader from '../../components/Loader/Loader';
 
 const DESCRIPTION_SHEET_ID = process.env.REACT_APP_INSERT_CODE_SHEET_ID!;
 const ADMIN_SHEET_ID = process.env.REACT_APP_ADMIN_SHEET_ID!;
@@ -30,11 +31,11 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
   const gasPriceService = new GasStationService();
 
   const loadDescriptionSheet = async () => {
-    const rows = await connectToGoogleSheets(DESCRIPTION_SHEET_ID);
-    if (!rows) return;
-    setTitle(rows[0].value);
-    setHeadline(rows[1].value);
-    seetDescription(rows[2].value);
+    const conn = await connectToGoogleSheets(DESCRIPTION_SHEET_ID);
+    if (!conn?.rows) return;
+    setTitle(conn.rows[0].value);
+    setHeadline(conn.rows[1].value);
+    seetDescription(conn.rows[2].value);
   };
 
   const setUserAllowance = async () => {
@@ -84,12 +85,12 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
   };
 
   const submitInviteCode = async () => {
-    const rows = await connectToGoogleSheets(ADMIN_SHEET_ID);
+    const conn = await connectToGoogleSheets(ADMIN_SHEET_ID);
 
-    if (!rows) return;
+    if (!conn) return;
 
     const currentAccount = context.account;
-    const validatedInviteCodeRow = validateInviteCode(rows);
+    const validatedInviteCodeRow = validateInviteCode(conn.rows);
     console.log(validatedInviteCodeRow);
     if (validatedInviteCodeRow) {
       await setUserAllowance();
@@ -154,6 +155,7 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
           onChangeValue={setInviteCode}
           submit={submitInviteCode}
         />
+        <Loader />
       </Modal>
     </div>
   );

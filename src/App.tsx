@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import InsertCode from './pages/InsertCode/types';
-import Invite from './pages/Invite/types';
+import ManageInvites from './pages/ManageInvites/types';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { GlobalStyle } from './components/ui/GlobalStyles';
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme = {
   colors: {
@@ -13,7 +16,7 @@ const theme = {
 };
 
 function App() {
-  const [isInsertCodeOpen, setIsInsertCodeOpen] = useState(true);
+  const [isInsertCodeOpen, setIsInsertCodeOpen] = useState(false);
   const toggleIsInsertCodeOpen = () => setIsInsertCodeOpen(!isInsertCodeOpen);
 
   const [isInviteOepn, setIsInviteOepn] = useState(false);
@@ -30,9 +33,20 @@ function App() {
         <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button>
         <button onClick={toggleIsInviteOpen}>Share code modal</button>
         <InsertCode isOpen={isInsertCodeOpen} toggle={toggleIsInsertCodeOpen} />
-        <Invite isOpen={isInviteOepn} toggle={toggleIsInviteOpen} />
+        <ManageInvites isOpen={isInviteOepn} toggle={toggleIsInviteOpen} />
       </Web3ReactProvider>
       <GlobalStyle />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ThemeProvider>
   );
 }

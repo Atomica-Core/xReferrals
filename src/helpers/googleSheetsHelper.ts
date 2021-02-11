@@ -16,10 +16,9 @@ export const connectToGoogleSheets = async (sheetIt: string) => {
     await doc.loadInfo();
 
     const sheet = doc.sheetsById[sheetIt];
-
     const rows = await sheet.getRows();
 
-    return rows;
+    return { rows, sheet };
 
   } catch (e) {
     console.error('Error: ', e);
