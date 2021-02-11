@@ -1,3 +1,5 @@
-export { default } from './ManageInvites';
-export * from './types';
 
+export interface Props {
+  isOpen: boolean;
+  toggle: () => void;
+}

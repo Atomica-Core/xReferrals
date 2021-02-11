@@ -3,8 +3,8 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { connectToGoogleSheets } from '../../helpers/googleSheetsHelper';
-import InsertCode from '../../pages/InsertCode/types';
-import ManageInvites from '../../pages/ManageInvites/types';
+import InsertCode from '../../pages/InsertCode';
+import ManageInvites from '../../pages/ManageInvites';
 import Loader from '../Loader';
 
 export interface RootProps {}
@@ -17,7 +17,6 @@ const Root: React.FC<RootProps> = () => {
   const [isInviteOepn, setIsInviteOepn] = useState(false);
   const toggleIsInviteOpen = () => setIsInviteOepn(!isInviteOepn);
 
-  const [isAlreadyInvited, setIsAlreadyInvited] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const context = useWeb3React<Web3Provider>();

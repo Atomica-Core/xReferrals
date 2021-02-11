@@ -1,4 +1,2 @@
-export interface Props {
-  isOpen: boolean;
-  toggle: () => void;
-}
+export { default } from './InsertCode';
+export * from './types';
