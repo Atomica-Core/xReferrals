@@ -43,3 +43,26 @@ export const PrimaryBtn = styled.button`
         border: 1px solid ${grey};
     }
 `;
+
+
+export const SecondaryBtn = styled.button`
+    background-color: white;
+    color: ${blue};
+    padding: 20px 35px;
+    border-radius: 4px;
+    border: 1px solid ${blue};
+    &.bigBtn {
+        width: 200px;
+    }
+    &:hover {
+        cursor: pointer;
+        color: white;
+        background-color: ${blue};
+    }
+    & + button {
+        margin-left: 10px;
+    }
+    &.smallBtn {
+        padding: 10px 15px;
+    }
+`

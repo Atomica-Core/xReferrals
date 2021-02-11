@@ -1,23 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Props } from '.';
-import { PrimaryBtn } from '../../../components/ui/Button';
-import DashedContainer, { FilledContainer } from '../../../components/ui/Container';
-import Input from '../../../components/ui/Input';
-import { Text2 } from '../../../components/ui/Text';
+import { PrimaryBtn, SecondaryBtn } from '../../../components/ui/Button';
+import { FilledContainer, GreenContainer } from '../../../components/ui/Container';
+import { Text1, Text2 } from '../../../components/ui/Text';
 import Title from '../../../components/ui/Title';
 import InvitesTable from './InvitesTable';
 
-const ModalContent: React.FC<Props> = ({
-  close,
-  title,
-  headline,
-  description,
-  inputValue,
-  onChangeValue,
-  submit,
-  inviteRows,
-}: Props) => {
+const ModalContent: React.FC<Props> = ({ close, title, headline, submit, inviteRows, claimable, claim }: Props) => {
   return (
     <>
       <Row>
@@ -26,10 +16,18 @@ const ModalContent: React.FC<Props> = ({
       </Row>
       <FilledContainer style={{ padding: '20px' }}>
         <Text2> {headline}</Text2>
-        <div style={{ marginTop: '10px' }}>
-          <Text2> {description}</Text2>
-        </div>
       </FilledContainer>
+      <GreenContainer>
+        <Row>
+          <ColumnCenter>
+            <Text1 style={{ color: 'white' }}>
+              {`CLAIMABLE:`}
+              <strong>{` ${claimable} USDC`}</strong>
+            </Text1>
+          </ColumnCenter>
+          <SecondaryBtn onClick={claim}>Claim</SecondaryBtn>
+        </Row>
+      </GreenContainer>
       <InvitesTable inviteRows={inviteRows} />
       <div style={{ marginTop: '30px', textAlign: 'center' }}>
         <PrimaryBtn onClick={submit}>Create Code</PrimaryBtn>
@@ -44,6 +42,11 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`;
+const ColumnCenter = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const Icon = styled.div`

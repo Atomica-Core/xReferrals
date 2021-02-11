@@ -11,6 +11,8 @@ import { useEagerConnect } from '../../hooks';
 import Loader from '../../components/Loader/Loader';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
+import { ContractApi, ContractEnum } from '../../utils/contractApi';
+import { BigNumber } from 'bignumber.js';
 
 const DESCRIPTION_SHEET_ID = process.env.REACT_APP_INVITE_SHEET_ID!;
 const ADMIN_SHEET_ID = process.env.REACT_APP_ADMIN_SHEET_ID!;
@@ -18,9 +20,7 @@ const ADMIN_SHEET_ID = process.env.REACT_APP_ADMIN_SHEET_ID!;
 const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
   const [title, setTitle] = useState('');
   const [headline, setHeadline] = useState('');
-  const [description, seetDescription] = useState('');
-  const [inviteCode, setInviteCode] = useState('');
-  const [signer, setSigner] = useState<JsonRpcSigner>();
+  const [claimable, setClaimable] = useState('');
   const [googleSheet, setGoogleSheet] = useState<GoogleSpreadsheetWorksheet>();
   const [inviteRows, setInviteRows] = useState<GoogleSpreadsheetRow[]>([]);
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,6 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
     console.log(conn);
     setTitle(conn.rows[0].value);
     setHeadline(conn.rows[1].value);
-    seetDescription(conn.rows[2].value);
     setLoading(false);
   };
 
@@ -72,6 +71,7 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
 
   useEffect(() => {
     async function activateWeb3() {
+      getClaimable();
       loadDescriptionSheet();
       loadInvitesCreatedByTheUser();
     }
@@ -79,6 +79,39 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
 
     activateWeb3();
   }, []);
+
+  const getClaimable = async () => {
+    try {
+      const signer = context.library?.getSigner();
+      const referralProgram = ContractApi.initContract(ContractEnum.ReferralProgram, signer);
+      const claimable = await referralProgram.referralFees(context.account);
+      setClaimable(new BigNumber(claimable.toString()).div('1e6').toPrecision(3));
+    } catch (e) {
+      console.log('ERROR', e);
+      // props.setLoading(false);
+    }
+  };
+
+  const claim = async () => {
+    try {
+      if (Number(claimable) <= 0) {
+        toast.error('Not enough money to claim');
+        return;
+      }
+      setLoading(true);
+      const referralProgram = ContractApi.initContract(ContractEnum.ReferralProgram, context.library?.getSigner());
+      const tx = await referralProgram.claimReferralFee({
+        gasLimit: 8000000,
+      });
+      await tx.wait(1);
+      await getClaimable();
+      setLoading(false);
+      toast('💸 Claimable redeemed!');
+    } catch (e) {
+      toast.error('Error');
+      setLoading(false);
+    }
+  };
 
   const content = {
     width: '500px',
@@ -106,14 +139,13 @@ const InsertCode: React.FC<Props> = ({ isOpen, toggle }) => {
     <div>
       <Modal isOpen={isOpen} style={{ content, overlay }}>
         <ModalContent
+          claimable={claimable}
           title={title}
           headline={headline}
-          description={description}
           close={toggle}
-          inputValue={inviteCode}
-          onChangeValue={setInviteCode}
           submit={createInvite}
           inviteRows={inviteRows}
+          claim={claim}
         />
         {loading && <Loader />}
       </Modal>

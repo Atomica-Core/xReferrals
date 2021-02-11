@@ -6,7 +6,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { GlobalStyle } from './components/ui/GlobalStyles';
 import { ToastContainer } from 'react-toastify';
 
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
 import WalletConnector from './components/WalletConnector/WalletConnector';
 import Root from './components/Root';
 

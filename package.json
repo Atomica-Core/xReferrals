@@ -20,6 +20,7 @@
     "@web3-react/core": "^6.1.1",
     "@web3-react/injected-connector": "^6.0.7",
     "axios": "^0.21.1",
+    "bignumber.js": "^9.0.1",
     "ethers": "^5.0.30",
     "google-spreadsheet": "^3.1.15",
     "nanoid": "^3.1.20",

@@ -4,9 +4,8 @@ export interface Props {
   close: () => void;
   title: string;
   headline: string;
-  description: string;
-  inputValue: string;
-  onChangeValue: (value: string) => void;
+  claimable: string;
+  claim: () => void;
   submit: () => void;
   inviteRows: GoogleSpreadsheetRow[]
 }
