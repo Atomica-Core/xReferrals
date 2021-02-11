@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { blue, lightBlue, grey } from './GlobalStyles'
+import { blue, lightBlue, grey, red, grayLight, white } from './GlobalStyles'
 export const PrimaryBtn = styled.button`
     background-color: ${blue};
     color: white;
@@ -66,3 +66,17 @@ export const SecondaryBtn = styled.button`
         padding: 10px 15px;
     }
 `
+
+export const FloatButton = styled.a`
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+  background-color:${white};
+  font-size: 24px;
+  border-radius:50px;
+	text-align:center;
+  box-shadow: 2px 2px 3px #999;
+  cursor:pointer;
+  `

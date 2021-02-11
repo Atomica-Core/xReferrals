@@ -7,6 +7,7 @@ import InsertCode from '../../pages/InsertCode';
 import ManageInvites from '../../pages/ManageInvites';
 import DappMock from '../DappMock';
 import Loader from '../Loader';
+import { FloatButton } from '../ui/Button';
 
 export interface RootProps {}
 const ADMIN_SHEET_ID = process.env.REACT_APP_ADMIN_SHEET_ID!;
@@ -46,8 +47,9 @@ const Root: React.FC<RootProps> = () => {
 
   return (
     <>
-      {/* <button onClick={toggleIsInsertCodeOpen}>Insert invite code modal</button> */}
-      <button onClick={toggleIsInviteOpen}>Share code modal</button>
+      <FloatButton onClick={toggleIsInviteOpen}>
+        <div style={{ marginTop: '15px' }}>👥</div>
+      </FloatButton>
       <DappMock />
       {loading ? (
         <Loader />

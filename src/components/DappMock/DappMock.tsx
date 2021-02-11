@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import { ContractApi, ContractEnum, getContractAddress } from '../../utils/contractApi';
 import { GasStationService } from '../../utils/gasStation';
 import Loader from '../Loader';
+import { PrimaryBtn } from '../ui/Button';
+import DashedContainer from '../ui/Container';
+import Input from '../ui/Input';
 
 export interface DappMockProps {}
 
@@ -54,10 +57,12 @@ const DappMock: React.FC<DappMockProps> = () => {
 
   return (
     <>
-      <button onClick={setUserAllowance}> set user allowance</button>
-      <button onClick={() => payPremium(referral)}> pay premium</button>
-      <input onChange={(e) => setReferral(e.target.value)} value={referral} />
-      {loading && <Loader />}
+      <DashedContainer style={{ padding: '20px', width: '50vw' }}>
+        <PrimaryBtn onClick={setUserAllowance}> set user allowance</PrimaryBtn>
+        <PrimaryBtn onClick={() => payPremium(referral)}> pay premium</PrimaryBtn>
+        <Input onChange={(e) => setReferral(e.target.value)} value={referral} />
+        {loading && <Loader />}
+      </DashedContainer>
     </>
   );
 };

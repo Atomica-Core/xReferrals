@@ -1,10 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Props } from '.';
 import { PrimaryBtn } from '../../../components/ui/Button';
 import DashedContainer from '../../../components/ui/Container';
 import Input from '../../../components/ui/Input';
-import { Text1, Text2 } from '../../../components/ui/Text';
+import { Text2 } from '../../../components/ui/Text';
 import Title from '../../../components/ui/Title';
 
 const ModalContent: React.FC<Props> = ({
